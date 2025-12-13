@@ -1,0 +1,30 @@
+name: build
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: sudo apt-get update && sudo apt-get install gnucobol
+      - run: |
+          cd /tmp
+          git clone --branch v1.4 https://github.com/opensourcecobol/Open-COBOL-ESQL.git
+          cd Open-COBOL-ESQL
+          ./configure
+          make
+          sudo make install
+      - uses: ankane/setup-postgres@v1
+        with:
+          database: pgvector_cobol_test
+          dev-files: true
+      - run: |
+          cd /tmp
+          git clone --branch v0.8.1 https://github.com/pgvector/pgvector.git
+          cd pgvector
+          make
+          sudo make install
+      - run: ocesql example.cbl example.cob
+      - run: cobc -x -locesql example.cob
+        env:
+          COBCPY: /tmp/Open-COBOL-ESQL/copy
+      - run: ./example
