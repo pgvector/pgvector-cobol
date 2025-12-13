@@ -3,18 +3,18 @@
 
        DATA DIVISION.
        WORKING-STORAGE SECTION.
-       01  USER        PIC X(64).
-       01  PASSWORD    PIC X(64) VALUE SPACE.
-       01  DBNAME      PIC X(64) VALUE "pgvector_cobol_test".
+       01  DB-USER     PIC X(64).
+       01  DB-PASS     PIC X(64) VALUE SPACE.
+       01  DB-NAME     PIC X(64) VALUE "pgvector_cobol_test".
        01  EMBEDDING   PIC X(1024).
        01  EMBEDDING2  PIC X(1024).
        01  NEAREST-ID  PIC X(20).
        EXEC SQL INCLUDE SQLCA END-EXEC.
 
        PROCEDURE DIVISION.
-           ACCEPT USER FROM ENVIRONMENT "USER".
+           ACCEPT DB-USER FROM ENVIRONMENT "USER".
            EXEC SQL
-               CONNECT :USER IDENTIFIED BY :PASSWORD USING :DBNAME
+               CONNECT :DB-USER IDENTIFIED BY :DB-PASS USING :DB-NAME
            END-EXEC.
 
            EXEC SQL
