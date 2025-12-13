@@ -10,6 +10,7 @@ jobs:
           cd /tmp
           git clone --branch v1.4 https://github.com/opensourcecobol/Open-COBOL-ESQL.git
           cd Open-COBOL-ESQL
+          autoreconf --force --install --verbose
           ./configure
           make
           sudo make install
@@ -26,5 +27,7 @@ jobs:
       - run: ocesql example.cbl example.cob
       - run: cobc -x -locesql example.cob
         env:
-          COBCPY: /tmp/Open-COBOL-ESQL/copy
+          COBCPY: /usr/local/share/open-cobol-esql/copy
       - run: ./example
+        env:
+          LD_PRELOAD: /usr/local/lib/libocesql.so
